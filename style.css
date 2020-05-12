@@ -1,0 +1,98 @@
+.title {
+	font-weight: bold;
+	font-size: 30px;
+}
+
+
+.width900px {
+    width: 900px;
+    display: inline-block;
+}
+
+.center {
+    text-align: center;
+}
+
+#startBtn {
+    border: none;
+    color: white;
+    background-color: #5AAFFF;
+    width: 80px;
+    padding: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#cardTable {
+    border-collapse: collapse;
+}
+
+#cardTable td {
+    border: 3px solid red;
+    width: 150px;
+    height: 242px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#cardTable td img {
+    max-width: 140px;
+}
+
+#cardTable td span {
+    font-size: 25pt;
+    font-weight: bold;
+    color: #5AAFFF;
+    display: none;
+}
+
+#cardTable2 {
+    border-collapse: collapse;
+}
+
+#cardTable2 td {
+    border: 3px solid blue;
+    width: 150px;
+    height: 242px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#cardTable2 td img {
+    max-width: 140px;
+}
+
+#cardTable2 td span {
+    font-size: 25pt;
+    font-weight: bold;
+    color: #5AAFFF;
+    display: none;
+}
+
+#redTeam {
+    background-color: red;
+    color: white;
+    font-size: 30pt;
+}
+
+#blueTeam {
+    background-color: blue;
+    color: white;
+    font-size: 30pt;
+}
+
+#info {
+    width: 450px;
+    height: 250px;
+    background-color: #DDDDDD;
+    color: white;
+    padding-top: 230px;
+}
+
+#menuTable {
+    width: 900px;
+    height: 100px;
+    background-color: white;
+    color: black;
+    padding-top: 0px;
+} 

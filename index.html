@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+            crossorigin="anonymous">
+    
+    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5eba9373dca3c777"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+
+<body class="center">
+    
+    <script>
+        // 게임 상태
+        var gameState = '';
+
+        // 열린 카드 src
+        var openCardId = '';
+        var openCardId2 = '';
+
+        // 난수 생성 함수
+        function generateRandom(min, max) {
+            var ranNum = Math.floor(Math.random() * (max - min + 1)) + min;
+            return ranNum;
+        }
+
+
+        var cards; // 카드 목록
+        var score = 0; // 점수
+        var score2 = 0; // 점수
+        var openedCtn = 0; // 맞춘 카드 갯수
+        var redclick = 1;
+        var blueclick = 1;
+
+        // 카드 배치
+        function setTable() {
+            cards = [
+                '1.png', // 쥐
+                '2.png', // 소
+                '3.png', // 호랑이
+                '4.png', // 토끼
+                '5.png', // 용
+                '6.png', // 뱀
+                '7.png', // 말
+                '8.png', // 양
+                '9.png', // 원숭이
+                '10.png', // 닭
+                '11.png', // 개
+                '12.png'  // 돼지
+            ];
+            var cardTableCode = '<tr>';
+            for (var i = 0; i < 12; i++) {
+                if (i > 0 && i % 6 == 0) {
+                    cardTableCode += '</tr><tr>';
+                }
+                var idx = generateRandom(0, 11 - i);
+                var img = cards.splice(idx, 1);
+
+                cardTableCode += '<td id="card' + i + '"><img src="images/' + img + '" class="rounded"><span>?</span></td>';
+            }
+            cardTableCode += '</tr>';
+            $('#cardTable').html(cardTableCode);
+        }
+
+        function setTable2() {
+            cards = [
+                '1.png', // 쥐
+                '2.png', // 소
+                '3.png', // 호랑이
+                '4.png', // 토끼
+                '5.png', // 용
+                '6.png', // 뱀
+                '7.png', // 말
+                '8.png', // 양
+                '9.png', // 원숭이
+                '10.png', // 닭
+                '11.png', // 개
+                '12.png'  // 돼지
+            ];
+            var cardTableCode = '<tr>';
+            for (var i = 0; i < 12; i++) {
+                if (i > 0 && i % 6 == 0) {
+                    cardTableCode += '</tr><tr>';
+                }
+                var idx = generateRandom(0, 11 - i);
+                var img = cards.splice(idx, 1);
+
+                cardTableCode += '<td id="cardB' + i + '"><img src="images/' + img + '" class="rounded"><span>?</span></td>';
+            }
+            cardTableCode += '</tr>';
+            $('#cardTable2').html(cardTableCode);
+        }
+
+        // 카드 전체 가리기
+        function hiddenCards() {
+            $('#cardTable td img').hide();
+            $('#cardTable td span').show();
+            $('#cardTable2 td img').hide();
+            $('#cardTable2 td span').show();
+        }
+
+        // 게임 시작
+        function startGame() {
+            var sec = 6;
+
+            $('#menuTable').height(100);
+            $('#game').show();
+
+            //$('#info').hide(); // 안내 문구 가리기
+            scoreInit(); // 점수 초기화
+            setTable(); // 카드 배치
+            setTable2(); // 카드 배치
+
+            //카운트 다운
+            function setText() {
+                $('#countDown').text(--sec);
+            }
+
+            //카운트 다운
+            var intervalID = setInterval(setText, 1000);
+            setTimeout(function () {
+                clearInterval(intervalID);
+                $('#redTeam').text('RED TEAM');
+                $('#blueTeam').text('BLUE TEAM');
+                hiddenCards();
+                gameState = '';
+                $('#countDown').text('');
+            }, 6000);
+        }
+
+
+        // 카드 선택 시
+        $(document).on('click', '#cardTable td', function () {
+            if (gameState != '') return; // 게임 카운트 다운중일 때 누른 경우 return
+            if (openCardId != '') return; // 열려있는데 또 누른 경우 return
+            if ($(this).hasClass('opened')) return; // 열려있는 카드를 또 누른 경우                
+            if (redclick != 1) return;
+
+
+            $(this).addClass('opened'); // 열여있다는 것을 구분하기 위한 class 추가
+
+
+            $(this).find('img').show();
+            $(this).find('span').hide();
+            openCardId = this.id;
+
+            if (openCardId != '' && openCardId2 != '') {
+                if (openCardId == openCardId2) return; //같은 카드 누른 경우 return
+
+                $(this).find('img').show();
+                $(this).find('span').hide();
+
+                var openCardSrc2 = $('#' + openCardId2).find('img').attr('src');
+                var openCardSrc = $(this).find('img').attr('src');
+
+
+                if (openCardSrc == openCardSrc2) { // 일치
+                    openCardId = '';
+                    openCardId2 = '';
+                    scorePlus();
+                    if (++openedCtn == 12) {
+                        if (score > score2)
+                            alert('RED TEAM WIN!!\n' + score + '점 입니다!');
+                        else if (score < score2)
+                            alert('BLUE TEAM WIN!!\n' + score2 + '점 입니다!');
+                        else
+                            alert('동점입니다!');
+                    }
+                } else { // 불일치
+                    setTimeout(back, 500);
+                    scoreMinus();
+                }
+
+                blueclick = 0;
+            }else if ( openCardId2 == '') {
+                blueclick = 1;
+            }
+        });
+
+        // 카드 선택 시
+        $(document).on('click', '#cardTable2 td', function () {
+            if (gameState != '') return; // 게임 카운트 다운중일 때 누른 경우 return
+            if (openCardId2 != '') return; // 열려있는데 또 누른 경우 return
+            if ($(this).hasClass('opened')) return; // 열려있는 카드를 또 누른 경우                
+            if (blueclick != 1) return;
+
+            $(this).addClass('opened'); // 열여있다는 것을 구분하기 위한 class 추가
+
+
+            $(this).find('img').show();
+            $(this).find('span').hide();
+            openCardId2 = this.id;
+
+            if (openCardId != '' && openCardId2 != '') {
+                if (openCardId == openCardId2) return; //같은 카드 누른 경우 return
+
+                $(this).find('img').show();
+                $(this).find('span').hide();
+
+                var openCardSrc = $('#' + openCardId).find('img').attr('src');
+                var openCardSrc2 = $(this).find('img').attr('src');
+
+
+                if (openCardSrc == openCardSrc2) { // 일치
+                    openCardId = '';
+                    openCardId2 = '';
+                    scorePlus2();
+                    if (++openedCtn == 12) {
+                        if (score > score2)
+                            alert('RED TEAM WIN!!\n' + score + '점 입니다!');
+                        else if (score < score2)
+                            alert('BLUE TEAM WIN!!\n' + score2 + '점 입니다!');
+                        else
+                            alert('동점입니다!');
+                    }
+                } else { // 불일치
+                    setTimeout(back, 500);
+                    scoreMinus2();
+                }
+
+                redclick = 0;
+            }else if ( openCardId == '') {
+                redclick = 1;
+            }
+        });
+
+        // 두개의 카드 다시 뒤집기
+        function back() {
+            // alert('[#'+openCardId+'] ['+'#'+openCardId2+']');
+
+            $('#' + openCardId).find('img').hide();
+            $('#' + openCardId).find('span').show();
+            $('#' + openCardId2).find('img').hide();
+            $('#' + openCardId2).find('span').show();
+            $('#' + openCardId).removeClass('opened');
+            $('#' + openCardId2).removeClass('opened');
+            openCardId = '';
+            openCardId2 = '';
+        }
+
+        // 점수 초기화
+        function scoreInit() {
+            score = 0;
+            score2 = 0;
+            openedCtn = 0;
+            $('#score').text(score);
+            $('#score2').text(score2);
+        }
+        // 점수 증가
+        function scorePlus() {
+            score += 10;
+            $('#score').text(score);
+        }
+        // 점수 감소
+        function scoreMinus() {
+            score -= 5;
+            $('#score').text(score);
+        }
+        // 점수 증가
+        function scorePlus2() {
+            score2 += 10;
+            $('#score2').text(score2);
+        }
+        // 점수 감소
+        function scoreMinus2() {
+            score2 -= 5;
+            $('#score2').text(score2);
+        }
+
+       
+
+        $(document).on('click', '#startBt', function () {
+            
+            if (gameState == '') {
+                startGame();
+                gameState = 'alreadyStart'
+            }
+        });
+
+    </script>
+
+    <div class="width900px">
+        <div >
+            <h2>IMAGE GUN</h2>
+            
+            <table id='menuTable' style="align-content: center; height: 1452px;" >
+                <tr>
+                    <td style="margin-top: 726px;">
+                        <br><button type="button" class="btn btn-success" id='startBt' style="width: 200px;">START</button><br><br>
+                        <h2>Match the picture and take the score</h2>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id='game' style="display: none;" >
+            <div id='redTeam' class="rounded-pill">
+                RED TEAM
+            </div>
+
+            <table id='cardTable'>
+            </table>
+            <div class="row">
+                <div class="col-sm" style="color: red;">
+                    <h1><span>score : <span id='score'>0</span></span></h1>
+                </div>
+                <h1><div class="col-sm" id="countDown"></div></h1>
+                <div class="col-sm" style="color: blue;">
+                    <h1><span>score : <span id='score2'>0</span></span></h1>
+                </div>
+            </div>
+            <table id='cardTable2'>
+            </table>
+            <div id='blueTeam' class="rounded-pill">
+                BLUE TEAM
+            </div>
+            
+        </div>
+        
+    </div>
+    
+    
+<p></p>
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox"></div>
+</body>
+
+</html>

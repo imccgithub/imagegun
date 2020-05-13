@@ -4,8 +4,8 @@
 }
 
 
-.width900px {
-    width: 900px;
+.total-box {
+    width: 54rem;
     display: inline-block;
 }
 
@@ -29,14 +29,14 @@
 
 #cardTable td {
     border: 3px solid red;
-    width: 150px;
-    height: 242px;
+    width: 144px;
+    height: 134px;
     text-align: center;
     cursor: pointer;
 }
 
 #cardTable td img {
-    max-width: 140px;
+    max-width: 144px;
 }
 
 #cardTable td span {
@@ -52,14 +52,14 @@
 
 #cardTable2 td {
     border: 3px solid blue;
-    width: 150px;
-    height: 242px;
+    width: 144px;
+    height: 134px;
     text-align: center;
     cursor: pointer;
 }
 
 #cardTable2 td img {
-    max-width: 140px;
+    max-width: 144px;
 }
 
 #cardTable2 td span {
@@ -90,9 +90,10 @@
 }
 
 #menuTable {
-    width: 900px;
-    height: 100px;
+    width: 864px;
+    height: 400px;
     background-color: white;
     color: black;
     padding-top: 0px;
+	text-align: center;
 } 

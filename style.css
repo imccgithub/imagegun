@@ -13,6 +13,13 @@
     text-align: center;
 }
 
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+    margin: 20px;
+}
 #startBtn {
     border: none;
     color: white;
@@ -30,7 +37,7 @@
 #cardTable td {
     border: 3px solid red;
     width: 145px;
-    height: 145px;
+    height: 170px;
     text-align: center;
     cursor: pointer;
 }
@@ -53,7 +60,7 @@
 #cardTable2 td {
     border: 3px solid blue;
     width: 145px;
-    height: 145px;
+    height: 170px;
     text-align: center;
     cursor: pointer;
 }
@@ -73,12 +80,14 @@
     background-color: red;
     color: white;
     font-size: 30pt;
+	margin: 30px;
 }
 
 #blueTeam {
     background-color: blue;
     color: white;
     font-size: 30pt;
+	margin: 30px;
 }
 
 #info {
